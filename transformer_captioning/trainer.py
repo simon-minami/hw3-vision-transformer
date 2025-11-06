@@ -2,7 +2,7 @@ import numpy as np
 from utils import  decode_captions
 
 import torch
-
+import torch.nn.functional as F
 
 class Trainer(object):
 
@@ -23,7 +23,11 @@ class Trainer(object):
     def loss(self, predictions, labels):
         #TODO - Compute cross entropy loss between predictions and labels. 
         #Make sure to compute this loss only for indices where label is not the null token.
-        #The loss should be averaged over batch and sequence dimensions. 
+        #The loss should be averaged over b5atch and sequence dimensions. 
+
+        # predicstion and labels are N,S,D captions?
+        print(f'loss debug: {predictions.shape, labels.shape}')
+        loss = None
         return loss
     
     def val(self):
