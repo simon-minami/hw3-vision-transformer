@@ -202,18 +202,29 @@ class CrossAttentionBlock(nn.Module):
         out += seq  # residual connection
         out = self.norm(out)
         return out
-
+class SwiGLU(nn.Module):
+    #(xW1​+b1​)⊙Swish(xW2​+b2​)
+    def __init__(self, input_dim, hidden_dim):
+        super().__init__()
+        self.linear1 = nn.Linear(input_dim, hidden_dim)
+        self.linear2 = nn.Linear(input_dim, hidden_dim)
+        self.proj = nn.Linear(hidden_dim, input_dim)  #project back up
+    def forward(self, x):
+        x = self.linear1(x) * F.silu(self.linear2(x))
+        return self.proj(x)
+    
 class FeedForwardBlock(nn.Module):
     def __init__(self, input_dim, num_heads, dim_feedforward=2048, dropout=0.1 ):
         super().__init__()
         # TODO: Initialize the following. 
         # MLP has the following layers : linear, relu, dropout, linear ; hidden dim of linear is given by dim_feedforward
-        self.mlp = nn.Sequential(
-            nn.Linear(input_dim, dim_feedforward),
-            nn.ReLU(),
-            nn.Dropout(p=dropout),
-            nn.Linear(dim_feedforward, input_dim)
-        )
+        # self.mlp = nn.Sequential(
+        #     nn.Linear(input_dim, dim_feedforward),
+        #     nn.ReLU(),
+        #     nn.Dropout(p=dropout),
+        #     nn.Linear(dim_feedforward, input_dim)
+        # )
+        self.mlp = SwiGLU(input_dim, dim_feedforward)
         self.dropout = nn.Dropout(dropout)
         self.norm = nn.LayerNorm(input_dim)
        
