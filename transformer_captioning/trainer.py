@@ -35,6 +35,12 @@ class Trainer(object):
         predictions = predictions.reshape(N*T, V)
         # reshape labels to match N*T, 
         labels = labels.reshape(N*T)
+        mask = labels != self.model._null
+        print(f'mask: {mask.shape}')
+        print(mask)
+        # now calc loss
+        # no reduction so we can apply custom mask
+        loss = F.cross_entropy(predictions, labels, reduction='none')
         # average over batch and seq to get per token loss
         # create mask so we only calc loss on non null tokens
         # mask is true for Not null, false for null
