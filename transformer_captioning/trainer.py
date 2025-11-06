@@ -36,6 +36,7 @@ class Trainer(object):
         # reshape labels to match N*T, 
         labels = labels.reshape(N*T)
         mask = labels != self.model._null
+        mask = torch.LongTensor(mask)
         print(f'mask: {mask.shape}')
         print(mask)
         # now calc loss
