@@ -25,7 +25,21 @@ class Trainer(object):
         #Make sure to compute this loss only for indices where label is not the null token.
         #The loss should be averaged over b5atch and sequence dimensions. 
 
-        # predicstion and labels are N,S,D captions?
+        # predicstion are N,T,V captions
+        # batch, seq length, vocab size
+        # labels are N, T
+        N, T, V = predictions.shape
+        
+
+        # reshape predictions to N*T,V so each row is token
+        predictions = predictions.reshape(N*T, V)
+        # reshape labels to match N*T, 
+        labels = labels.reshape(N*T)
+        # average over batch and seq to get per token loss
+        # create mask so we only calc loss on non null tokens
+        # mask is true for Not null, false for null
+
+        # mask = labels != self.model._null
         print('debug')
         print(f'loss debug: {predictions.shape, labels.shape}')
         loss = None
