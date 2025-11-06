@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 from trainer import Trainer
 from transformer import TransformerDecoder
 from matplotlib import pyplot as plt
+from argparse import ArgumentParser
 
 set_all_seeds(42) ### DO NOT CHANGE THIS LINE
 exp_name = 'case1'
@@ -15,6 +16,11 @@ train_dataloader =  DataLoader(train_dataset, batch_size=64)
 val_dataset = CocoDataset(load_coco_data(max_val = 1024), 'val')
 val_dataloader =  DataLoader(val_dataset, batch_size=64)
 
+parser = ArgumentParser()
+parser.add_argument('--num_heads', type=int)
+parser.add_argument('--num_layers', type=int)
+parser.add_argument('--lr', type=float)
+args = parser.parse_args()
 
 device = 'cuda'
 transformer = TransformerDecoder(
@@ -22,15 +28,15 @@ transformer = TransformerDecoder(
           idx_to_word = train_dataset.data['idx_to_word'],
           input_dim=train_dataset.data['train_features'].shape[1],
           embed_dim=256,
-          num_heads=2,
-          num_layers=2,
+          num_heads=args.num_heads,
+          num_layers=args.num_layers,
           max_length=30,
           device = device
         )
 
 trainer = Trainer(transformer, train_dataloader, val_dataloader,
           num_epochs=100,
-          learning_rate=1e-4,
+          learning_rate=args.lr,
           device = device
         )
 
