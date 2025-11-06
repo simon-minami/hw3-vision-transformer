@@ -44,14 +44,12 @@ class Trainer(object):
         # no reduction so we can apply custom mask
         loss = F.cross_entropy(predictions, labels, reduction='none')
         # apply mask, should be same shape as loss
-        print(f'loss {loss.shape}')
-        loss *= mask
-        # average over batch and seq to get per token loss
+        print(f'loss before mask {loss.shape}')
+        loss = loss[mask]
+        print(f'loss after mask: {loss.shape}')
+        # average over NON NULL batch and seq to get per token loss
         loss = torch.mean(loss)
         
-
-
-        # mask = labels != self.model._null
         print(f'loss {loss}')
         return loss
     
