@@ -8,7 +8,6 @@ from matplotlib import pyplot as plt
 from argparse import ArgumentParser
 
 set_all_seeds(42) ### DO NOT CHANGE THIS LINE
-exp_name = 'case1'
 
 train_dataset = CocoDataset(load_coco_data(max_train=1024), 'train')
 train_dataloader =  DataLoader(train_dataset, batch_size=64)
@@ -17,10 +16,13 @@ val_dataset = CocoDataset(load_coco_data(max_val = 1024), 'val')
 val_dataloader =  DataLoader(val_dataset, batch_size=64)
 
 parser = ArgumentParser()
+parser.add_argument('--exp_name', type=str)
 parser.add_argument('--num_heads', type=int)
 parser.add_argument('--num_layers', type=int)
 parser.add_argument('--lr', type=float)
 args = parser.parse_args()
+exp_name = args.exp_name
+
 
 device = 'cuda'
 transformer = TransformerDecoder(
