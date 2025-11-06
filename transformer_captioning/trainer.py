@@ -26,6 +26,7 @@ class Trainer(object):
         #The loss should be averaged over b5atch and sequence dimensions. 
 
         # predicstion and labels are N,S,D captions?
+        print('debug')
         print(f'loss debug: {predictions.shape, labels.shape}')
         loss = None
         return loss
