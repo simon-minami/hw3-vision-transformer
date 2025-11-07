@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from vit import ViT
 import os
-
+import torch.nn.functional as F
 class Trainer:
     def __init__(self, model, train_dataloader, test_dataloader, learning_rate = 0.001, batch_size = 100, 
             num_epochs = 10, print_every = 10, save_every=10, verbose = True, device = 'cuda'):
@@ -51,7 +51,7 @@ class Trainer:
         
         # TODO - Compute cross entropy loss between predictions and labels. 
         loss = None
-        
+        loss = F.cross_entropy(predictions, labels)
 
         return loss
 
